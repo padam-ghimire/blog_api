@@ -17,7 +17,7 @@ class CreateBlogPostsTable extends Migration
             $table->id();
             $table->string('title');
             $table->longText('details');
-            $table->string('featured_image_url')->nullable;
+            $table->string('featured_image_url')->nullable();
             $table->integer('user_id');
             $table->integer('category_id');
 

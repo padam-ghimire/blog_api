@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BlogPost;
 use Illuminate\Http\Request;
-
+use App\Models\Category;
+use App\Models\BlogPost;
 class BlogPostController extends Controller
 {
     /**
@@ -14,7 +14,9 @@ class BlogPostController extends Controller
      */
     public function index()
     {
-        //
+        $blogs = BlogPost::all();
+
+        return view('blog.index',compact('blogs'));
     }
 
     /**
@@ -24,7 +26,8 @@ class BlogPostController extends Controller
      */
     public function create()
     {
-        //
+        $categories= Category::all();
+        return view('blog.create',compact('categories'));
     }
 
     /**
@@ -35,7 +38,33 @@ class BlogPostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       $blogPost = new BlogPost();
+
+       $blogPost->title = $request->input('title');
+       $blogPost->details = $request->input('blogDetails');
+       $blogPost->user_id = 1;
+       $blogPost->category_id=$request->input('category');
+
+    //    return $blog;
+       if($blogPost->save()){
+           $photo = $request->file('featuredPhoto');
+           if($photo!=null){
+               $ext = $photo->getClientOriginalExtension();
+                $fileName = time().rand(10000,50000).'.'.$ext;
+
+                if($photo->move(public_path('/images'),$fileName)){
+                    $blogPost = BlogPost::find($blogPost->id);
+                    $blogPost->featured_image_url = url('/images').'/'.$fileName;
+                    $blogPost->save();
+                }
+                
+
+           }
+            return redirect()->back()->with('success','Blog created successfully!');
+       }
+       return redirect()->back()->with('err','Blog cannot be created!');
+
+
     }
 
     /**
@@ -55,9 +84,11 @@ class BlogPostController extends Controller
      * @param  \App\Models\BlogPost  $blogPost
      * @return \Illuminate\Http\Response
      */
-    public function edit(BlogPost $blogPost)
+    public function edit($id)
     {
-        //
+        $blog = BlogPost::find($id);
+        $categories = Category::all();
+        return view('blog.edit',compact('blog','categories'));
     }
 
     /**
@@ -67,9 +98,35 @@ class BlogPostController extends Controller
      * @param  \App\Models\BlogPost  $blogPost
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BlogPost $blogPost)
+    public function update(Request $request, $id)
     {
-        //
+        $blogPost = BlogPost::find($id);
+
+        $blogPost->title = $request->input('title');
+        $blogPost->details = $request->input('blogDetails');
+        $blogPost->user_id = 1;
+        $blogPost->category_id=$request->input('category');
+ 
+     //    return $blog;
+        if($blogPost->save()){
+            $photo = $request->file('featuredPhoto');
+            if($photo!=null){
+                $ext = $photo->getClientOriginalExtension();
+                 $fileName = time().rand(10000,50000).'.'.$ext;
+ 
+                 if($photo->move(public_path('/images'),$fileName)){
+                     $blogPost = BlogPost::find($blogPost->id);
+                     $blogPost->featured_image_url = url('/images').'/'.$fileName;
+                     $blogPost->save();
+                 }
+                 
+ 
+            }
+             return redirect()->back()->with('success','Blog Updated successfully!');
+        }
+        return redirect()->back()->with('err','Blog cannot be Updated!');
+ 
+
     }
 
     /**
@@ -78,8 +135,12 @@ class BlogPostController extends Controller
      * @param  \App\Models\BlogPost  $blogPost
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BlogPost $blogPost)
+    public function destroy($id)
     {
-        //
+        if(BlogPost::destroy($id)){
+            return redirect()->back()->with('success','Blog deleted successfully!');
+        }
+        return redirect()->back()->with('err','Blog cannot be deleted');
+        
     }
 }

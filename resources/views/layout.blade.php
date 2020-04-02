@@ -10,6 +10,7 @@
     <link href="{{ URL::to('css/styles.css')}}" rel="stylesheet" />
         <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="{{ URL::to('ckeditor/ckeditor.js')}}" crossorigin="anonymous"></script>
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -47,12 +48,13 @@
                             >
                             <div class="sb-sidenav-menu-heading">Interface</div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts"
-                                ><div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                Layouts
+                                >
+                                Blogs
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
                             ></a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="layout-static.html">Static Navigation</a><a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a></nav>
+                            <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="{{ URL::to('get-all-blog-post')}}">All Blogs</a>
+                                <a class="nav-link" href="{{ URL::to('get-bog-post-form')}}">Create new blog</a></nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages"
                                 ><div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
@@ -114,4 +116,9 @@
         <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
         <script src="assets/demo/datatables-demo.js"></script>
     </body>
+    <script>
+        // Replace the <textarea id="editor1"> with a CKEditor
+        // instance, using default configuration.
+        CKEDITOR.replace( 'editor1' );
+    </script>
 </html>
